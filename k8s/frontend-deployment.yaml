@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kouho-frontend
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kouho-frontend
+  template:
+    metadata:
+      labels:
+        app: kouho-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: xuantumrek/kouho-frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"

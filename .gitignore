@@ -1,0 +1,2 @@
+backend/.env
+k8s/secret.yaml

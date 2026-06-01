@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kouho-backend
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kouho-backend
+  template:
+    metadata:
+      labels:
+        app: kouho-backend
+    spec:
+      containers:
+      - name: backend
+        image: xuantumrek/kouho-backend:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: kouho-config
+        - secretRef:
+            name: kouho-secret
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+        startupProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 5
